@@ -1,14 +1,17 @@
 package com.youngsuk.bookstore.controller;
 
-import com.youngsuk.bookstore.common.utils.annoation.Authorized;
 import com.youngsuk.bookstore.dto.UserDto;
 import com.youngsuk.bookstore.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpSession;
+
+import static com.youngsuk.bookstore.common.utils.constants.SessionKeyConstants.USER_SESSION_KEY;
 
 /*
 [@RestController 공부내용]
@@ -19,7 +22,7 @@ import javax.servlet.http.HttpSession;
 
 @RestController
 @RequestMapping("/users")
-public class UserInfoController {
+public class UserController {
 
   @Autowired
   private UserService userService;
@@ -32,33 +35,27 @@ public class UserInfoController {
   */
 
   @PostMapping
-  public ResponseEntity<UserDto> addUser(UserDto userDto) {
-    userService.insertUser(userDto);
+  public ResponseEntity<UserDto> register(UserDto userDto) {
+    userService.insertUserData(userDto);
     return ResponseEntity.status(HttpStatus.CREATED).body(userDto);
   }
 
-  @Authorized
-  @DeleteMapping(value = "{userId}")
-  public ResponseEntity<String> deleteUser(@PathVariable String userId, HttpSession httpSession) {
-    userService.deleteUser(userId);
-    httpSession.invalidate();
-    return ResponseEntity.status(HttpStatus.OK).body(userId);
+  @PostMapping("/login")
+  public ResponseEntity<UserDto> login(UserDto userDto,
+                                       HttpSession session) {
+
+    boolean loginSuccess = userService.isUserPasswordCorrect(userDto);
+
+    if (loginSuccess) {
+      session.setAttribute(USER_SESSION_KEY, userDto.getUserId());
+
+      return ResponseEntity.status(HttpStatus.OK).body(userDto);
+
+    } else {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(userDto);
+    }
   }
-
-  @Authorized
-  @PatchMapping(value = "{userId}")
-  public ResponseEntity<UserDto> updateUser(@PathVariable String userId, UserDto userDto) {
-    UserDto user = UserDto.builder()
-            .userId(userDto.getUserId())
-            .userName(userDto.getUserName())
-            .userEmail(userDto.getUserEmail())
-            .build();
-
-    userService.updateUser(userDto);
-    return ResponseEntity.status(HttpStatus.OK).body(userDto);
-  }
-
-  
 
 }
+
 

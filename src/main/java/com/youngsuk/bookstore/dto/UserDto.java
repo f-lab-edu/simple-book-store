@@ -1,12 +1,11 @@
 package com.youngsuk.bookstore.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.Getter;
+import lombok.Setter;
 
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
 public final class UserDto {
   private String userId;
   private String userName;
