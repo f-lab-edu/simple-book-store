@@ -1,14 +1,12 @@
 package com.youngsuk.bookstore.service.implementation;
 
-import com.youngsuk.bookstore.common.utils.constants.SortTypeEnum;
+import com.youngsuk.bookstore.dto.BookCategoryDto;
 import com.youngsuk.bookstore.dto.BookDto;
-import com.youngsuk.bookstore.dto.PagingDto;
 import com.youngsuk.bookstore.repository.BookRepository;
 import com.youngsuk.bookstore.service.BookService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 
@@ -27,6 +25,13 @@ public class BookServiceImpl implements BookService {
   3. return 값을 key값에 대응하는 value에 저장한다.
   */
 
+  //TODO. 캐시 key 생성
+//  @Cacheable(cacheNames = "bookCategoryList")
+  public List<BookCategoryDto> cacheBookCategoryList() {
+    return bookRepository.findBookByCategoryList();
+  }
+
+  //TODO. 캐시 key 생성
   @Cacheable(cacheNames = "BookByCategoryCache", key = "{#categoryName}")
   public List<BookDto> getBookByCategory(BookDto bookDto) {
     return bookRepository.selectBookByCategory(bookDto);

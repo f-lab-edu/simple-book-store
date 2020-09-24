@@ -2,12 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "mybatis-3-mapper.dtd">
 
 <mapper namespace="com.youngsuk.bookstore.repository.BookRepository">
+    <!--table을 full scan 하는 이유는 책의 카테고리 개수가 많지 않기 때문이다. (2020-09-24 기준 11개) -->
+    <select id="findBookByCategoryList" resultType="com.youngsuk.bookstore.dto.BookCategoryDto">
+        SELECT
+            bookCategoryCode, bookCategoryName
+        FROM
+            bookCategoryCodeTable
+    </select>
+
     <select id="selectBookByCategory" resultType="com.youngsuk.bookstore.dto.BookDto">
         SELECT
         bookName, authorName, bookPublishDate,
         bookCost, bookLikeCount
         FROM
-        book
+            bookProductTable
         LEFT JOIN
         author
         ON
