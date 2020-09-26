@@ -17,10 +17,10 @@ public final class BookDto {
   private String bookAuthorIntroduce;
   private String bookIndexDescription;
   private String bookLikeCount;
+  private int bookCategoryCode;
 
   @NonNull
-  @JsonIgnore
-  private String bookCategory;
+  private String bookCategoryName;
   @NonNull
   @JsonIgnore
   private PagingDto pagingDto;

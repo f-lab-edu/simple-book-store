@@ -10,4 +10,5 @@ import java.util.List;
 @Repository
 public interface BookRepository {
   List<BookDto> selectBookByCategory(BookDto bookDto);
+  List<BookDto> findBookCategoryList();
 }
